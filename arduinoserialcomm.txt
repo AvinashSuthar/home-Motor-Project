@@ -1,0 +1,96 @@
+#include<SoftwareSerial.h>
+SoftwareSerial Arduino_SoftSerial(10,11);
+
+char c;
+String DataIn;
+int8_t indexOfA, indexOfB , indexOfC, indexOfD; 
+
+String data1, data2, data3, data4;
+
+
+
+int M1 ,  M2, M3, M4;
+int Led  = 7; 
+
+void setup() {
+  // put your setup code here, to run once:
+
+
+  Serial.begin(9600);
+  Arduino_SoftSerial.begin(9600);
+
+
+  pinMode(Led , OUTPUT);
+
+}
+
+void loop() {
+  
+  // put your main code here, to run repeatedly:
+
+
+  while(Arduino_SoftSerial.available()>0)
+  {
+  c = Arduino_SoftSerial.read();
+
+
+
+  if(c=='\n'){break;}
+  else{
+    DataIn += c;
+  }
+}
+
+  if(c=='\n'){
+    ParseTheData();
+    Serial.println("Data1 : "+ data1);
+    Serial.println("Data2 : "+ data2);
+    Serial.println("Data3 : "+ data3);
+    Serial.println("Data4 : "+ data4);
+    Serial.println("----------------------------------------------------------");
+    c  = 0;
+    DataIn= "";
+  }
+
+    M1 = data1.toInt();
+
+    Serial.print({"M1 : "}); Serial.println(M1);
+    if(M1 > 0 ){
+      digitalWrite(Led, HIGH);
+      Serial.print("M1 Is high");
+    }
+    else{
+      digitalWrite(Led, LOW);
+      Serial.print("M1 Is Low");
+
+    }
+
+
+}
+
+
+
+void ParseTheData(){
+  indexOfA = DataIn.indexOf("A");
+  indexOfB = DataIn.indexOf("B");
+  indexOfC = DataIn.indexOf("C");
+  indexOfD = DataIn.indexOf("D");
+
+
+    data1 = DataIn.substring(0,indexOfA);
+    data2 = DataIn.substring(indexOfA+1,indexOfB);
+    data3 = DataIn.substring(indexOfB+1,indexOfC);
+    data4 = DataIn.substring(indexOfC+1,indexOfD);
+    
+}
+
+
+
+
+
+
+
+
+
+
+
