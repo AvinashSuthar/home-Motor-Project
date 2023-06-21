@@ -1,0 +1,102 @@
+#include<SoftwareSerial.h>
+
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+
+#define BLYNK_PRINT Serial
+#define BLYNK_TEMPLATE_ID "TMPL38Ieji7kp"
+#define BLYNK_TEMPLATE_NAME "Motor"
+#define BLYNK_AUTH_TOKEN "Ex91F0BW4x0V2Y38soAaehtnbG29GE1O"
+
+
+char auth[] = BLYNK_AUTH_TOKEN;
+char ssid[] = "rasss";
+char pass[] = "wertyuiop";
+
+
+SoftwareSerial NodeMcu_SoftSerial(D1, D2);
+
+int data1, data2, data3, data4;
+
+
+void setup(){
+  Serial.begin(9600);
+  NodeMcu_SoftSerial.begin(9600);
+  WifiConnect();
+  Blynk.begin(auth, ssid, pass);
+
+}
+
+void loop(){
+  Blynk.run();
+
+
+
+  // data1  = 100;
+  // data2  = 200;
+  // data3  = 300;
+  // data4  = 400;
+
+  NodeMcu_SoftSerial.print(data1);  NodeMcu_SoftSerial.print("A");
+  NodeMcu_SoftSerial.print(data2);  NodeMcu_SoftSerial.print("B");
+  NodeMcu_SoftSerial.print(data3);  NodeMcu_SoftSerial.print("C");
+  NodeMcu_SoftSerial.print(data4);  NodeMcu_SoftSerial.print("D");  
+  NodeMcu_SoftSerial.print("\n");
+  delay(1000);
+
+  PrintData();
+
+}
+
+void PrintData(){
+  Serial.println(data1);
+  Serial.println(data2);
+  Serial.println(data3);
+  Serial.println(data4);
+  Serial.println("-----------------------");
+
+}
+
+void WifiConnect() {
+  Serial.begin(9600);
+  WiFi.begin(ssid, pass);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("Connected");
+}
+
+
+BLYNK_WRITE(V0) {
+  int motorStatus1 = param.asInt();
+  Serial.print("M1: ");
+  Serial.println(motorStatus1);
+  Blynk.virtualWrite(V0, motorStatus1);
+  data1 = motorStatus1;
+}
+
+BLYNK_WRITE(V1) {
+  int motorStatus2 = param.asInt();
+  Serial.print("M2: ");
+  Serial.println(motorStatus2);
+  Blynk.virtualWrite(V1, motorStatus2);
+  data2 = motorStatus2;
+  
+}
+BLYNK_WRITE(V2) {
+  int motorStatus3 = param.asInt();
+  Serial.print("M3: ");
+  Serial.println(motorStatus3);
+  Blynk.virtualWrite(V2, motorStatus3);
+  data3 = motorStatus3;
+ 
+}
+BLYNK_WRITE(V3) {
+  int motorStatus4 = param.asInt();
+  Serial.print("M4: ");
+  Serial.println(motorStatus4);
+  Blynk.virtualWrite(V3, motorStatus4);
+  data4 = motorStatus4;
+ 
+}
